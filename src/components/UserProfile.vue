@@ -8,6 +8,21 @@
             <div class="user-profile_follower-count">
                 <strong>Followers: </strong> {{ followers }}
             </div>
+            <form class="user-profile_create-twoot" @submit.prevent="createNewTwoot">
+              <label for="newTwoot"><strong>New Twoots</strong></label>
+              <textarea id="newTwoot" rows="4" v-model="newTwootContent"></textarea>
+              <div class="user-profile_create-twoot-type">
+                <label for="newTwootType"><strong>Type: </strong></label>
+                <select id="newTwootType" v-model="selectedTwootType">
+                  <option :value="option.value" v-for="(option, index) in twootType" :key="index">
+                    {{ option.name }}  
+                  </option> 
+                </select>
+              </div>
+              <button>
+                Twoot!
+              </button>
+            </form>
         </div>
         <div class="user-profile_twoots-wrapper">
             <TwootItem v-for="twoot in user.twoots" :key="twoot.id" :username="user.username" :twoot="twoot" @favorite="toggleFavorite" />
@@ -35,7 +50,13 @@ export default {
             {id: 1, content: "Twoots is amazing!"},
             {id: 2, content: "R6 is funnnnnnnnnn!"}
         ]
-      }
+      },
+      twootType: [
+        {value: "draft", name: "Draft"},
+        {value: "instant", name: "Instant Twoot"}
+      ],
+      newTwootContent: "",
+      selectedTwootType: "instant"
     }
   },
   watch: {
@@ -55,8 +76,17 @@ export default {
     followUser() {
       this.followers++;
     },
-    toggleFavorite(id){
-        console.log(`Fovorited twoot @${id} !`)
+    toggleFavorite(id) {
+      console.log(`Fovorited twoot @${id} !`)
+    },
+    createNewTwoot() {
+      if(this.newTwootContent && this.selectedTwootType != "draft"){
+        this.user.twoots.unshift({ // New data will be put at the beginning.
+          id: this.user.twoots.length + 1,
+          content: this.newTwootContent
+        })
+        this.newTwootContent = ""
+      }
     }
   },
   mounted() {
@@ -90,9 +120,22 @@ export default {
     margin-right: auto;
     padding: 0 10px;
     font-weight: bold;
+    margin-bottom: 20px;
 }
 
 h1 {
     margin: 0;
 }
+
+.user-profile_twoots-wrapper {
+  display: grid;
+  grid-gap: 10px;
+}
+
+.user-profile_create-twoot {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
 </style>
