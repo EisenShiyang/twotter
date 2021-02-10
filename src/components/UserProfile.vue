@@ -2,21 +2,21 @@
   <div class="user-profile">
     <div class="user-profile_sidebar">
       <div class="user-profile_user-panel">
-        <h1 class="user-profile_username"> @{{ user.username }} </h1>
-        <div class="user-profile_admin_badge" v-if="user.isAdmin">
+        <h1 class="user-profile_username"> @{{ state.user.username }} </h1>
+        <div class="user-profile_admin_badge" v-if="state.user.isAdmin">
           Admin
         </div>
         <div class="user-profile_follower-count">
-          <strong>Followers: </strong> {{ followers }}
+          <strong>Followers: </strong> {{ state.followers }}
         </div>
       </div>
       <CreateTwootPanel @add-twoot="addTwoot"/>
     </div>
     <div class="user-profile_twoots-wrapper">
       <TwootItem
-        v-for="twoot in user.twoots"
+        v-for="twoot in state.user.twoots"
         :key = "twoot.id"
-        :username = "user.username"
+        :username = "state.user.username"
         :twoot = "twoot"
       />
     </div>
@@ -25,13 +25,14 @@
 
 <script>
 import TwootItem from "./TwootItem";
-import CreateTwootPanel from "./CreateTwootPanel"
+import CreateTwootPanel from "./CreateTwootPanel";
+import { reactive } from "vue";
 
 export default {
   name: 'UserProfile',
   components: { CreateTwootPanel, TwootItem },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       followers: 0,
       user: {
         id: 1,
@@ -45,33 +46,21 @@ export default {
             {id: 2, content: "R6 is funnnnnnnnnn!"}
         ]
       }
-    }
-  },
-  watch: {
-    followers(newFollowerCount, oldFolloerCount) {
-      if (newFollowerCount > oldFolloerCount){
-        console.log(`${this.user.username} has gained a follower`);
-      }
-    }
-  },
-  computed: {
-    fullName() {
-      return `${this.user.firstName} ${this.user.lastName}`;
-      // String literal -> It is similar to "this.user.firstName+' '+this.user.lastName"
-    },
-    newTwootCharacterCount(){
-      return this.newTwootContent.length;
-    }
-  },
-  methods: {
-    addTwoot(twoot) {
-      this.user.twoots.unshift({ // New data will be put at the beginning.
-          id: this.user.twoots.length + 1,
+    })
+
+    function addTwoot(twoot) {
+      state.user.twoots.unshift({ // New data will be put at the beginning.
+          id: state.user.twoots.length + 1,
           content: twoot
       });
     }
+
+    return {
+      state,
+      addTwoot
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -101,6 +90,11 @@ export default {
       margin-right: auto;
       padding: 0 10px;
       font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .user-profile_follower-count {
+      margin-top: 10px;
     }
   }
 
