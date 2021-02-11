@@ -1,23 +1,22 @@
 <template>
   <div id="app">
     <nav>
-      <div class="navigation_logo">
-        Twotter
-      </div>
+      <router-link :to="{ name: 'Home' }"> 
+        <div class="navigation_logo">
+          Twotter
+        </div>
+      </router-link>
       <div class="navigation_user">
         {{ user.username }}
       </div>
     </nav>
-    <UserProfile/>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import UserProfile from "./components/UserProfile"
-
 export default {
   name: 'App',
-  components: { UserProfile },
   data() {
     return {
       user: {
@@ -37,7 +36,6 @@ export default {
   min-height: 100vh;
   background-color: #F3F5FA;
 }
-
 nav {
   display: flex;
   align-items: center;
@@ -45,12 +43,10 @@ nav {
   padding: 10px 5%;
   background-color: #40a7c7;
   color: white;
-
   .navigation_logo {
     font-size: 24px;
     font-weight: bold;
   }
-
   .navigation_user {
     font-weight: bold;
   }
