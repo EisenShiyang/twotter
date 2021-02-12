@@ -6,7 +6,8 @@
           Twotter
         </div>
       </router-link>
-      <div class="navigation_user">
+      <!-- if is needed to declare only show the username when we actually have the user, since the page will finish rendering before we get the user info-->
+      <div class="navigation_user" v-if="user"> 
         {{ user.username }}
       </div>
     </nav>
@@ -15,13 +16,16 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
 export default {
   name: 'App',
-  data() {
-    return {
-      user: {
-        username:'_HankChen'
-      }
+  setup(){
+    const store = useStore();
+    const user = computed(() => store.state.User.user);
+    return{
+      user
     }
   }
 }
@@ -43,6 +47,7 @@ nav {
   padding: 10px 5%;
   background-color: #40a7c7;
   color: white;
+  height: 35px;
   .navigation_logo {
     font-size: 24px;
     font-weight: bold;
