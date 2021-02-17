@@ -10,7 +10,7 @@
           <strong>Followers: </strong> {{ state.followers }}
         </div>
       </div>
-      <CreateTwootPanel @add-twoot="addTwoot"/>
+      <CreateTwootPanel @add-twoot="addTwoot"/> <!-- Listen at add-twoot event from CreateTwootPanel-->
     </div>
     <div class="user-profile_twoots-wrapper">
       <TwootItem
